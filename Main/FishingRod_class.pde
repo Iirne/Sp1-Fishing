@@ -26,6 +26,9 @@ class Boat {
   float rotationSpeed = 2;
   float rotation;
   float sumRotation;
+
+  //boats manages ripples of their own creation.
+  //in case the boat got deleted this would be bad
   ArrayList<Ripple> ripples = new ArrayList<Ripple>();
 
   //constructor
@@ -42,30 +45,35 @@ class Boat {
     }
   }
   //rotates the boat based on input
-  //needs compressing
   void boatRotate(float TempRotate) {
     rotation = TempRotate;
-    if (inputs[0]&& inputs[2]) {
-      rotation += rotationSpeed;
-      ripples.add(new Ripple((int)(posX + dirX*65), (int)(posY + dirY*65), 20));
+    if (inputs[2]) {
+      if (inputs[0]) {
+        rotation += rotationSpeed;
+        ripples.add(new Ripple((int)(posX + dirX*65), (int)(posY + dirY*65), 20));
+      }
+      if (inputs[1]) {
+        rotation += -rotationSpeed;
+        ripples.add(new Ripple((int)(posX + dirX*65), (int)(posY + dirY*65), 20));
+      }
     }
-    if (inputs[1]&& inputs[2]) {
-      rotation += -rotationSpeed;
-      ripples.add(new Ripple((int)(posX + dirX*65), (int)(posY + dirY*65), 20));
-    }
+    
+    
     float cos = cos(radians(rotation));
     float sin = sin(radians(rotation));
     float tempX = dirX * cos - dirY * sin;
-    float tempY = dirX * sin + dirY * cos;
+    dirY = dirX * sin + dirY * cos;
     dirX = tempX;
-    dirY = tempY;
-    sumRotation += rotation;
+    
   }
 
   //the graphical elemtents of the boat
   void drawBoat() {
+    
     noStroke();
     translate(posX, posY);
+    //rotates boat to sum of its rotations
+    sumRotation += rotation;
     rotate(radians(sumRotation));
     fill(0);
     rect(15, 0+30, -30, -40);
@@ -74,7 +82,7 @@ class Boat {
     translate(-posX, -posY);
   }
   void throwLine(float tempDirX, float tempDirY) {
-    
+
     if (inputs[3] && lineOnHold == true) {
       lineOnHold = false;
       fLPosX = posX;
@@ -126,17 +134,18 @@ class Boat {
       line(posX, posY, fLPosX, fLPosY);
     }
   }
+
+
   void updateRipples() {
+    //for each can probably be used, but i don't know a method which allows deletion
     for (int i = 0; i < ripples.size(); i++) {
       Ripple tempRipples = ripples.get(i);
       //deletes ripples too small
       if (tempRipples.diameter < 0 || tempRipples.visibility < 0) {
         ripples.remove(i);
-        i--;
-      } else {
-        //drawing ripples;
-        tempRipples.drawRipple();
       }
+      //drawing ripples;
+      tempRipples.drawRipple();
     }
   }
 }

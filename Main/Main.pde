@@ -24,6 +24,10 @@ void draw() {
     if (tempFish.fishGone() || (tempFish.isCaught && boat.lineOnHold)) {
       fishes.remove(i);
     }
+    //whille it could be within the fish class, as it is setup it allows for easier scaling of the amount of boats
+    if (boat.landed) {
+      tempFish.fishLineBehaviour(boat.fLPosX, boat.fLPosY, frameCount-boat.frameskip);
+    }
     //updates movement
     tempFish.moveFish();
 

@@ -5,7 +5,6 @@ class Fish {
   float dirX;
   float dirY = 1;
   float rotation;
-  float sumRotation;
   float speed = 2;
   float scaredSpeed = 1;
   boolean isCaught = false;
@@ -17,6 +16,8 @@ class Fish {
   float fishSize=10;
   float fishLength= 20;
   float tailSmoothrotation;
+    //only used with drawing the body
+  float sumRotation;
 
   //constructor for fish
   Fish(float tempX, float tempY, float tempFishLength, float tempFishSize, float tempSpeed) {
@@ -76,9 +77,8 @@ class Fish {
     }
     
     //for fishes reaction to the line
-    if (boat.landed) {
-      fishLineBehaviour(boat.fLPosX, boat.fLPosY, frameCount-boat.frameskip);
-    }
+    //should be fed in instead of this bad thing
+    
     //moves 1 step if not caught
     if (!isCaught) {
       //updates position of fish
@@ -95,9 +95,8 @@ class Fish {
     float cos = cos(radians(rotation));
     float sin = sin(radians(rotation));
     float tempX = dirX * cos - dirY * sin;
-    float tempY = dirX * sin + dirY * cos;
+    dirY = dirX * sin + dirY * cos;
     dirX = tempX;
-    dirY = tempY;
   }
 
 
